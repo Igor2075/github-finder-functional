@@ -1,47 +1,50 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useContext } from "react";
+import GithubContext from "../../context/github/githubContext";
+import AlertContext from "../../context/alert/alertContext";
 
-export class Search extends Component {
-	state = {
-		text: "",
+function Search() {
+	const githubContext = useContext(GithubContext);
+	const alertContext = useContext(AlertContext);
+	const { users, clearUsers, searchUsers } = githubContext;
+	const { showAlert } = alertContext;
+	const [text, setText] = useState("");
+
+	const handleChange = (e) => {
+		setText(e.target.value);
 	};
 
-	static propTypes = {
-		searchUser: PropTypes.func.isRequired,
-		setAlert: PropTypes.func.isRequired,
-	};
-
-	handleChange = (e) => {
-		this.setState({
-			[e.target.name]: e.target.value,
-		});
-	};
-
-	onSubmit = (e) => {
+	const onSubmit = (e) => {
 		e.preventDefault();
-		if (this.state.text === "") {
-			this.props.setAlert("Please, enter something first", "light");
+		if (text === "") {
+			showAlert("Please, enter something first", "light");
 		} else {
-			this.props.searchUser(this.state.text);
-			this.setState({ text: "" });
+			searchUsers(text);
+			setText("");
 		}
 	};
-	render() {
-		return (
-			<div>
-				<form onSubmit={this.onSubmit}>
-					<input
-						type="text"
-						name="text"
-						placeholder="Search..."
-						value={this.state.text}
-						onChange={this.handleChange}
-					/>
-					<button className="btn btn-dark btn-block">Search</button>
-				</form>
-			</div>
-		);
-	}
+
+	return (
+		<div>
+			<form onSubmit={onSubmit}>
+				<input
+					type="text"
+					name="text"
+					placeholder="Search..."
+					value={text}
+					onChange={handleChange}
+				/>
+				<button className="btn btn-dark btn-block">Search</button>
+				{users.length > 0 && (
+					<button
+						className="btn btn-light btn-block"
+						onClick={clearUsers}
+						style={{ marginTop: "1rem" }}>
+						Clear
+					</button>
+				)}
+			</form>
+		</div>
+	);
 }
 
 export default Search;

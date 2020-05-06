@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 function UserItem(props) {
@@ -21,10 +20,5 @@ function UserItem(props) {
 		</div>
 	);
 }
-
-UserItem.propTypes = {
-	user: PropTypes.object.isRequired,
-	getUser: PropTypes.func.isRequired,
-};
 
 export default UserItem;
